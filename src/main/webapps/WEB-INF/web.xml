@@ -13,7 +13,7 @@
     </description>
     <servlet>
         <servlet-name>bear</servlet-name>
-        <servlet-class>com.bodejidi.BenBen</servlet-class>
+        <servlet-class>com.bodejidi.Management</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>bear</servlet-name>
