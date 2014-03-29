@@ -53,14 +53,7 @@ public class Management extends HttpServlet
             }
             else if("register".equals(action))
             {
-                resp.getWriter().println("<html><head><title>register</title></head><body>"
-                                        +"<h1>会员注册</h1>"
-                                        +"<form action=\"member\" method=\"POST\">UserName:<input type=\"text\" name=\"username\"/></br>"
-                                        +"<Password:<input type=\"password\" name=\"password\"/></br>"
-                                        +"firstName:<input type=\"text\" name=\"first_name\"/></br>"
-                                        +"lastName:<input type=\"text\" name=\"last_name\"/></br>"
-                                        +"<input type=\"submit\" name=\"action\" value=\"Add\">"
-                                        +"</form></body></html>");           
+                register(resp);    
             }
         }  
         catch(SQLException ex)
@@ -74,5 +67,17 @@ public class Management extends HttpServlet
         {  
             //ignore;
         }        
+    }
+    
+    public void register(HttpServletResponse resp)throws ServletException, IOException
+    {
+          resp.getWriter().println("<html><head><title>register</title></head><body>"
+                                        +"<h1>会员注册</h1>"
+                                        +"<form action=\"member\" method=\"POST\">UserName:<input type=\"text\" name=\"username\"/></br>"
+                                        +"Password:<input type=\"password\" name=\"password\"/></br>"
+                                        +"firstName:<input type=\"text\" name=\"first_name\"/></br>"
+                                        +"lastName:<input type=\"text\" name=\"last_name\"/></br>"
+                                        +"<input type=\"submit\" name=\"action\" value=\"Add\"/>"
+                                        +"</form></body></html>");  
     }
 }
