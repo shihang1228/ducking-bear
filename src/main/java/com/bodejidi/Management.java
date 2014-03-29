@@ -30,20 +30,21 @@ public class Management extends HttpServlet
         String action = req.getParameter("action");
         Connection conn = null;
         Statement stmt = null;
-                
+         
         if("login".equals(action))
         {
-                
+                    
         }
         else if("register".equals(action))
         {
-            register(resp);    
+            register(resp);
+            
         }
         else if("Add".equals(action))
         {              
             add(req, resp);
         }
-
+         
     }
     
     public void register(HttpServletResponse resp)throws ServletException, IOException
@@ -57,7 +58,7 @@ public class Management extends HttpServlet
                                         +"<input type=\"submit\" name=\"action\" value=\"Add\"/>"
                                         +"</form></body></html>");  
     }
-    public Statement connection(HttpServletResponse resp)throws ServletException, IOException
+    public Connection connection(HttpServletResponse resp)throws ServletException, IOException
     {
         Connection conn = null;
         Statement stmt = null;
@@ -65,7 +66,7 @@ public class Management extends HttpServlet
         {
             Class.forName(JDBC_DRIVER).newInstance();
             conn = DriverManager.getConnection(JDBC_CONNECTOR);
-            stmt = conn.createStatement();
+           // stmt = conn.createStatement();
         }
         catch(SQLException ex)
         {
@@ -78,7 +79,7 @@ public class Management extends HttpServlet
         {  
             //ignore;
         }        
-        return stmt;
+        return conn;
         
     }
     public void add(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException
@@ -88,23 +89,36 @@ public class Management extends HttpServlet
         String action = req.getParameter("action");
         String firstName = req.getParameter("first_name");
         String lastName = req.getParameter("last_name");
+        Connection conn = null;
+        Statement stmt = null;
         try
         {
-            Statement stme = connection(resp); 
+            conn = connection(resp); 
+            stmt = conn.createStatement();
+        
             String sql = "INSERT INTO management(user_name, password, first_name, last_name, date_created, last_updated)"
-                        +"VALUES('"+ userName + "', '" + password + "', '" + firstName + "', '" + lastName +"', now(), now())";
-            stme.execute(sql);
+                       + "VALUES('"+ userName + "', '" + password + "', '" + firstName + "', '" + lastName +"', now(), now())";
+            stmt.execute(sql);
             System.out.println(sql);
             resp.getWriter().println("add  " + firstName + "  " + lastName + "  success !!");
         }
         catch(SQLException ex)
         {
-            
+            System.out.println("SQLExcepton: " + ex.getMessage());
+            System.out.println("SQLStates: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            resp.getWriter().println("error!");  
         }
+        finally
+        {
+            close(conn);
+            close(stmt);
+        }
+         
     }
     public void close(AutoCloseable obj)
     {
-        if(!obj=null)
+        if(obj!=null)
         {
             try
             {
