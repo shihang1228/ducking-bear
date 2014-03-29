@@ -12,6 +12,9 @@ import java.sql.DriverManager;
 
 public class Management extends HttpServlet
 {
+    static final String JdbcDriver = "com.mysql.jdbc.Driver";
+    static final String JdbcConnector = "jdbc:mysql://localhost/test?user=root&password=";
+    
     public void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
 		//resp.getWriter().println("shihanghangxing");
@@ -22,32 +25,28 @@ public class Management extends HttpServlet
         resp.setContentType("text/html; charset = UTF-8");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        //resp.getWriter().println( username +"   "+ password + " success!!!");
+        
+        Connection conn = null;
+        Statement stmt = null;
+        resp.getWriter().println( username +"   "+ password + " success!!!");
         
         try 
         {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-        }catch(Exception ex)
-        {
-          //ignore;
-        }
-            Connection conn = null;
-            Statement stmt = null;
-        
-        try
-        {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/test?"
-                                                 + "user=root"
-                                                 + "&password=");
+            Class.forName(JdbcDriver).newInstance();
+            conn = DriverManager.getConnection(JdbcConnector);
             stmt = conn.createStatement();
             resp.getWriter().println("haha!hehe!");
-        
-        }catch(SQLException ex)
+        }  
+        catch(SQLException ex)
         {
             System.out.println("SQLExcepton: " + ex.getMessage());
             System.out.println("SQLStates: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
             resp.getWriter().println("error!");
         }
+        catch(Exception ex)
+        {  
+            //ignore;
+        }  
     }
 }
