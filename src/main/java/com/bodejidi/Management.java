@@ -26,44 +26,24 @@ public class Management extends HttpServlet
     public void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
         req.setCharacterEncoding(ENCODING);
-        resp.setContentType(CONTENT_TYPE);
-        String userName = req.getParameter("username");
-        String password = req.getParameter("password");
+        resp.setContentType(CONTENT_TYPE);     
         String action = req.getParameter("action");
-        String firstName = req.getParameter("first_name");
-        String lastName = req.getParameter("last_name");
         Connection conn = null;
         Statement stmt = null;
-        
-        Statement stme = connection(resp);    
-        try
-        {
-            if("submit".equals(action))
-            {
                 
-            }
-            else if("register".equals(action))
-            {
-                register(resp);    
-            }
-            else if("Add".equals(action))
-            {
-                String sql = "INSERT INTO management(user_name, password, first_name, last_name, date_created, last_updated)"
-                             +"VALUES('"+ userName + "', '" + password + "', '" + firstName + "', '" + lastName +"', now(), now())";
-                stme.execute(sql);
-                System.out.println(sql);
-                resp.getWriter().println("add  " + firstName + "  " + lastName + "  success !!");
-            }
-            
-        }
-        catch(SQLException ex)
+        if("submit".equals(action))
         {
-            System.out.println("SQLExcepton: " + ex.getMessage());
-            System.out.println("SQLStates: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            resp.getWriter().println("error!");
+                
         }
-        
+        else if("register".equals(action))
+        {
+            register(resp);    
+        }
+        else if("Add".equals(action))
+        {              
+            add(req, resp);
+        }
+
     }
     
     public void register(HttpServletResponse resp)throws ServletException, IOException
@@ -100,6 +80,27 @@ public class Management extends HttpServlet
         }        
         return stmt;
         
+    }
+    public void add(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException
+    {
+        String userName = req.getParameter("username");
+        String password = req.getParameter("password");
+        String action = req.getParameter("action");
+        String firstName = req.getParameter("first_name");
+        String lastName = req.getParameter("last_name");
+        try
+        {
+            Statement stme = connection(resp); 
+            String sql = "INSERT INTO management(user_name, password, first_name, last_name, date_created, last_updated)"
+                        +"VALUES('"+ userName + "', '" + password + "', '" + firstName + "', '" + lastName +"', now(), now())";
+            stme.execute(sql);
+            System.out.println(sql);
+            resp.getWriter().println("add  " + firstName + "  " + lastName + "  success !!");
+        }
+        catch(SQLException ex)
+        {
+            
+        }
     }
     
 }
