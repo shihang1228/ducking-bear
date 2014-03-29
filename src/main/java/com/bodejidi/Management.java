@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.sql.DriverManager;
+import java.lang.AutoCloseable;
 
 public class Management extends HttpServlet
 {
@@ -21,7 +22,6 @@ public class Management extends HttpServlet
     public void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
         
-           
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
@@ -31,7 +31,7 @@ public class Management extends HttpServlet
         Connection conn = null;
         Statement stmt = null;
                 
-        if("submit".equals(action))
+        if("login".equals(action))
         {
                 
         }
@@ -100,6 +100,20 @@ public class Management extends HttpServlet
         catch(SQLException ex)
         {
             
+        }
+    }
+    public void close(AutoCloseable obj)
+    {
+        if(!obj=null)
+        {
+            try
+            {
+                obj.close();
+            }
+            catch(Exception ex)
+            {
+                //ignore
+            }
         }
     }
     
