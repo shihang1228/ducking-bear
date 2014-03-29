@@ -12,8 +12,10 @@ import java.sql.DriverManager;
 
 public class Management extends HttpServlet
 {
-    static final String JdbcDriver = "com.mysql.jdbc.Driver";
-    static final String JdbcConnector = "jdbc:mysql://localhost/test?user=root&password=";
+    static final String JDBC_DRIVER= "com.mysql.jdbc.Driver";
+    static final String JDBC_CONNECTOR = "jdbc:mysql://localhost/test?user=root&password=";
+    static final String ENCODING = "UTF-8";
+    static final String CONTENT_TYPE = "text/html;charset=UTF-8";
     
     public void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
@@ -21,8 +23,8 @@ public class Management extends HttpServlet
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
-        req.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html; charset = UTF-8");
+        req.setCharacterEncoding(ENCODING);
+        resp.setContentType(CONTENT_TYPE);
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         
@@ -32,8 +34,8 @@ public class Management extends HttpServlet
         
         try 
         {
-            Class.forName(JdbcDriver).newInstance();
-            conn = DriverManager.getConnection(JdbcConnector);
+            Class.forName(JDBC_DRIVER).newInstance();
+            conn = DriverManager.getConnection(JDBC_CONNECTOR);
             stmt = conn.createStatement();
             resp.getWriter().println("haha!hehe!");
         }  
