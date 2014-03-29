@@ -17,6 +17,7 @@ public class Management extends HttpServlet
     static final String ENCODING = "UTF-8";
     static final String CONTENT_TYPE = "text/html;charset=UTF-8";
     
+    
     public void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
         
@@ -31,17 +32,12 @@ public class Management extends HttpServlet
         String action = req.getParameter("action");
         String firstName = req.getParameter("first_name");
         String lastName = req.getParameter("last_name");
-        
         Connection conn = null;
         Statement stmt = null;
-        //resp.getWriter().println( username +"   "+ password + " success!!!");
         
-        try 
+        Statement stme = connection(resp);    
+        try
         {
-            Class.forName(JDBC_DRIVER).newInstance();
-            conn = DriverManager.getConnection(JDBC_CONNECTOR);
-            stmt = conn.createStatement();
-            //resp.getWriter().println("haha!hehe!");
             if("submit".equals(action))
             {
                 
@@ -54,12 +50,12 @@ public class Management extends HttpServlet
             {
                 String sql = "INSERT INTO management(user_name, password, first_name, last_name, date_created, last_updated)"
                              +"VALUES('"+ userName + "', '" + password + "', '" + firstName + "', '" + lastName +"', now(), now())";
-                stmt.execute(sql);
+                stme.execute(sql);
                 System.out.println(sql);
                 resp.getWriter().println("add  " + firstName + "  " + lastName + "  success !!");
             }
             
-        }  
+        }
         catch(SQLException ex)
         {
             System.out.println("SQLExcepton: " + ex.getMessage());
@@ -67,15 +63,12 @@ public class Management extends HttpServlet
             System.out.println("VendorError: " + ex.getErrorCode());
             resp.getWriter().println("error!");
         }
-        catch(Exception ex)
-        {  
-            //ignore;
-        }        
+        
     }
     
     public void register(HttpServletResponse resp)throws ServletException, IOException
     {
-          resp.getWriter().println("<html><head><title>register</title></head><body>"
+        resp.getWriter().println("<html><head><title>register</title></head><body>"
                                         +"<h1>会员注册</h1>"
                                         +"<form action=\"member\" method=\"POST\">UserName:<input type=\"text\" name=\"username\"/></br>"
                                         +"Password:<input type=\"password\" name=\"password\"/></br>"
@@ -84,4 +77,29 @@ public class Management extends HttpServlet
                                         +"<input type=\"submit\" name=\"action\" value=\"Add\"/>"
                                         +"</form></body></html>");  
     }
+    public Statement connection(HttpServletResponse resp)throws ServletException, IOException
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        try 
+        {
+            Class.forName(JDBC_DRIVER).newInstance();
+            conn = DriverManager.getConnection(JDBC_CONNECTOR);
+            stmt = conn.createStatement();
+        }
+        catch(SQLException ex)
+        {
+            System.out.println("SQLExcepton: " + ex.getMessage());
+            System.out.println("SQLStates: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            resp.getWriter().println("error!");
+        }        
+        catch(Exception ex)
+        {  
+            //ignore;
+        }        
+        return stmt;
+        
+    }
+    
 }
