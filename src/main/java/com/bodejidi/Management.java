@@ -19,23 +19,18 @@ public class Management extends HttpServlet
     
     public void doGet(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
-        resp.getWriter().println("<html><head><title>register</title></head><body>"
-                                +"<h1>会员注册</h1>"
-                                +"<form action=\"member\" method=\"POST\">UserName:<input type=\"text\" name=\"username\"/></br>"
-                                +"<Password:<input type=\"password\" name=\"password\"/></br>"
-                                +"firstName:<input type=\"text\" name=\"first_name\"/></br>"
-                                +"lastName:<input type=\"text\" name=\"last_name\"/></br>"
-                                +"<input type=\"submit\" name=\"action\" value=\"Add\">"
-                                +"</form></body></html>");           
+        
            
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
         req.setCharacterEncoding(ENCODING);
         resp.setContentType(CONTENT_TYPE);
-        String username = req.getParameter("username");
+        String userName = req.getParameter("username");
         String password = req.getParameter("password");
         String action = req.getParameter("action");
+        String firstName = req.getParameter("first_name");
+        String lastName = req.getParameter("last_name");
         
         Connection conn = null;
         Statement stmt = null;
@@ -55,6 +50,15 @@ public class Management extends HttpServlet
             {
                 register(resp);    
             }
+            else if("Add".equals(action))
+            {
+                String sql = "INSERT INTO management(user_name, password, first_name, last_name, date_created, last_updated)"
+                             +"VALUES('"+ userName + "', '" + password + "', '" + firstName + "', '" + lastName +"', now(), now())";
+                stmt.execute(sql);
+                System.out.println(sql);
+                resp.getWriter().println("add  " + firstName + "  " + lastName + "  success !!");
+            }
+            
         }  
         catch(SQLException ex)
         {
