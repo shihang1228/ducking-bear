@@ -35,38 +35,7 @@ public class Management extends HttpServlet
         }
         else
         {
-            try
-            {
-                conn = connection(resp); 
-                stmt = conn.createStatement();
-                sql = sql + " where id=" + pid;
-                rs = stmt.executeQuery((sql));
-                System.out.println(sql);
-                rs.next();
-                Long id = rs.getLong("id");
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                resp.getWriter().println("<html><head><title>指定会员</title></head>"
-                                    +"<body><h1>第" + pid + "号会员</h1>"
-                                    +"<table border=1><tr><th>ID</th><th>firstName</th><th>lastName</th></tr>"
-                                    +"<tr><td>" + id + "</td><td>" + firstName + "</td><td>" + lastName + "</td></tr>"
-                                    +"</table><form><input type=\"submit\" name=\"action\" value=\"update\"/>"
-                                    +"<input type=\"submit\" name=\"action\" value=\"delete\"/>"
-                                    +"</form></body></html>");
-            
-            }        
-            catch(SQLException ex)
-            {
-                System.out.println("SQLExcepton: " + ex.getMessage());
-                System.out.println("SQLStates: " + ex.getSQLState());
-                System.out.println("VendorError: " + ex.getErrorCode());
-                resp.getWriter().println("error!");
-            }
-            finally
-            {
-                close(conn);
-                close(stmt);
-            }
+            selectMember(req,resp);            
         }      
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
@@ -216,6 +185,48 @@ public class Management extends HttpServlet
             close(conn);
             close(stmt);
         }
+    }
+    public void selectMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        String pid = req.getParameter("id");
+        String sql = "SELECT * FROM management";
+        req.setCharacterEncoding(ENCODING);
+        resp.setContentType(CONTENT_TYPE);     
+        try
+            {           
+                conn = connection(resp); 
+                stmt = conn.createStatement();
+                sql = sql + " where id=" + pid;
+                rs = stmt.executeQuery((sql));
+                System.out.println(sql);
+                rs.next();
+                Long id = rs.getLong("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                resp.getWriter().println("<html><head><title>指定会员</title></head>"
+                                    +"<body><h1>第" + pid + "号会员</h1>"
+                                    +"<table border=1><tr><th>ID</th><th>firstName</th><th>lastName</th></tr>"
+                                    +"<tr><td>" + id + "</td><td>" + firstName + "</td><td>" + lastName + "</td></tr>"
+                                    +"</table><form><input type=\"submit\" name=\"action\" value=\"update\"/>"
+                                    +"<input type=\"submit\" name=\"action\" value=\"delete\"/>"
+                                    +"</form><a href=\"member\">Member List</a></body></html>");
+            
+            }        
+            catch(SQLException ex)
+            {
+                System.out.println("SQLExcepton: " + ex.getMessage());
+                System.out.println("SQLStates: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                resp.getWriter().println("error!");
+            }
+            finally
+            {
+                close(conn);
+                close(stmt);
+            }
     }
     
 }
