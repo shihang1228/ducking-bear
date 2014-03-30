@@ -59,6 +59,10 @@ public class Management extends HttpServlet
         {              
             add(req, resp);
         }
+        else if("delete".equals(action))
+        {
+            deleteMember(req,resp);
+        }
          
     }
     
@@ -207,11 +211,12 @@ public class Management extends HttpServlet
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 resp.getWriter().println("<html><head><title>指定会员</title></head>"
-                                    +"<body><h1>第" + pid + "号会员</h1>"
+                                    +"<body><h1>第" + pid + "号会员</h1><form action=\"member\" method=\"POST\">"
                                     +"<table border=1><tr><th>ID</th><th>firstName</th><th>lastName</th></tr>"
                                     +"<tr><td>" + id + "</td><td>" + firstName + "</td><td>" + lastName + "</td></tr>"
-                                    +"</table><form><input type=\"submit\" name=\"action\" value=\"update\"/>"
+                                    +"</table><input type=\"submit\" name=\"action\" value=\"update\"/>"
                                     +"<input type=\"submit\" name=\"action\" value=\"delete\"/>"
+                                    +"<input type=\"hidden\" name=\"id\" value=\"" + pid + "\"/>"
                                     +"</form><a href=\"member\">Member List</a></body></html>");
             
             }        
@@ -228,5 +233,35 @@ public class Management extends HttpServlet
                 close(stmt);
             }
     }
+    public void deleteMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        String firstName = req.getParameter("first_name");
+        String lastName = req.getParameter("last_name");
+        String id = req.getParameter("id");
+        String sql = "DELETE FROM management WHERE ID=" + id;
+        try
+        {
+            conn = connection(resp); 
+            stmt = conn.createStatement();
+            stmt.execute(sql);
+            System.out.println(sql);
+            resp.getWriter().println("delete 第 " + id + " 号 success!!!");           
+        }
+         catch(SQLException ex)
+            {
+                System.out.println("SQLExcepton: " + ex.getMessage());
+                System.out.println("SQLStates: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                resp.getWriter().println("error!");
+            }
+            finally
+            {
+                close(conn);
+                close(stmt);
+            }
+    }
+    
     
 }
