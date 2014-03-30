@@ -43,7 +43,7 @@ public class Management extends HttpServlet
                 Long id = rs.getLong("id");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");                               
-                resp.getWriter().println("<tr><td>" + id + "</td><td>" + firstName + lastName + "</td></tr>");
+                resp.getWriter().println("<tr><td><a href=\"?id=" + id + "\">" + id + "</td><td>" + firstName + lastName + "</td></tr>");
                 
             }
             resp.getWriter().println("</table><a href=\".\">会员管理</a></body></html>");
