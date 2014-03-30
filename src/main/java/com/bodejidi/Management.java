@@ -120,6 +120,7 @@ public class Management extends HttpServlet
             stmt.execute(sql);
             System.out.println(sql);
             resp.getWriter().println("add  " + firstName + "  " + lastName + "  success !!");
+            resp.getWriter().println("<html><body><a href=\"member\">Member List</body></html>");
         }
         catch(SQLException ex)
         {
@@ -247,7 +248,8 @@ public class Management extends HttpServlet
             stmt = conn.createStatement();
             stmt.execute(sql);
             System.out.println(sql);
-            resp.getWriter().println("delete 第 " + id + " 号 success!!!");           
+            resp.getWriter().println("delete 第 " + id + " 号 success!!!"); 
+            resp.getWriter().println("<html><body><a href=\"member\">Member List</body></html>");
         }
          catch(SQLException ex)
             {
