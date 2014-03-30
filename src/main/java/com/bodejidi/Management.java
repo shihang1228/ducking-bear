@@ -30,6 +30,14 @@ public class Management extends HttpServlet
         req.setCharacterEncoding(ENCODING);
         resp.setContentType(CONTENT_TYPE);
         String pid = req.getParameter("id");
+        HttpSession session = req.getSession();
+        Long memberId = (Long)session.getAttribute("memberId");
+        
+        if(memberId == null)
+        {
+            login(req,resp);
+            return;
+        }
         if(pid==null)
         {
             memberList(req,resp);
@@ -55,7 +63,7 @@ public class Management extends HttpServlet
             if(username.equals("shihang")&&password.equals("sh1228sh"))
             {
                 HttpSession session = req.getSession();
-                session.setAttribute("memberID",0L);
+                session.setAttribute("memberId",0L);
                 resp.getWriter().println("<html><head><title>Login Success</title></head>"
                                         +"<body><p>Welcome  " + username + "!!!</p>"
                                         +"<a href=\"member\">Member List</a>"
@@ -65,7 +73,7 @@ public class Management extends HttpServlet
             {
                 resp.getWriter().println("<html><head><title>Login Success</title></head>"
                                         +"<body><p>login failed!!!</p>"
-                                        +"<a href=\".\">会员登录</a>"
+                                       // +"<a href=\"member\">会员登录</a>"
                                         +"</body></html>");
             }
         }
@@ -98,7 +106,7 @@ public class Management extends HttpServlet
                                         +"firstName:<input type=\"text\" name=\"first_name\"/></br>"
                                         +"lastName:<input type=\"text\" name=\"last_name\"/></br>"
                                         +"<input type=\"submit\" name=\"action\" value=\"Add\"/>"
-                                        +"</form><a href=\".\">会员登录</a></body></html>");  
+                                        +"</form><a href=\"member\">会员登录</a></body></html>");  
     }
     public Connection connection(HttpServletResponse resp)throws ServletException, IOException
     {
@@ -199,7 +207,7 @@ public class Management extends HttpServlet
                 resp.getWriter().println("<tr><td><a href=\"?id=" + id + "\">" + id + "</td><td>" + firstName + lastName + "</td></tr>");
                 
             }
-            resp.getWriter().println("</table><a href=\".\">会员登录</a></body></html>");
+            resp.getWriter().println("</table></body></html>");
         }
         catch(SQLException ex)
             {
@@ -319,6 +327,25 @@ public class Management extends HttpServlet
             close(stmt);
         }
     }
+    public void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    {
+        resp.getWriter().println("<html>");
+        resp.getWriter().println("<head>");
+        resp.getWriter().println("<title>index</title>");
+        resp.getWriter().println("<meta http-equiv=\"Content-Type\" content=\"text/html\"; charset=\"UTF-8\">");
+        resp.getWriter().println("</head>");
+        resp.getWriter().println("<body>");
+        resp.getWriter().println("<h1>会员登录</h1>");
+        resp.getWriter().println("<form action=\"member\" method=\"POST\">");
+        resp.getWriter().println("<label>用户名:<input type=\"text\" name=\"username\"/></label></br>");
+        resp.getWriter().println("<label>密  码:<input type=\"password\" name=\"password\"/></label></br>");
+        resp.getWriter().println("<input type=\"submit\" name=\"action\" value=\"login\"/>");
+        resp.getWriter().println("<input type=\"submit\" name=\"action\" value=\"register\"/>");
+        resp.getWriter().println("</form>");
+        resp.getWriter().println("</body>");
+        resp.getWriter().println("</html>");
+    }
+    
     
     
     
