@@ -28,38 +28,7 @@ public class Management extends HttpServlet
         String sql = "SELECT * FROM management";
         req.setCharacterEncoding(ENCODING);
         resp.setContentType(CONTENT_TYPE);     
-        try
-        {   
-            conn = connection(resp); 
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery((sql));
-            System.out.println(sql);
-            
-            resp.getWriter().println("<html><head><title>会员列表</title></head>");
-            resp.getWriter().println("<body><h1>会员列表</h1></h1>");
-            resp.getWriter().println("<table border=1><tr><th>Id</th><th>Name</th></tr>");         
-            while(rs.next())
-            {
-                Long id = rs.getLong("id");
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");                               
-                resp.getWriter().println("<tr><td><a href=\"?id=" + id + "\">" + id + "</td><td>" + firstName + lastName + "</td></tr>");
-                
-            }
-            resp.getWriter().println("</table><a href=\".\">会员管理</a></body></html>");
-        }
-        catch(SQLException ex)
-            {
-                System.out.println("SQLExcepton: " + ex.getMessage());
-                System.out.println("SQLStates: " + ex.getSQLState());
-                System.out.println("VendorError: " + ex.getErrorCode());
-                resp.getWriter().println("error!");
-            }
-        finally
-        {
-            close(conn);
-            close(stmt);
-        }
+        memberList(req,resp);
         
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
@@ -167,6 +136,47 @@ public class Management extends HttpServlet
             {
                 //ignore
             }
+        }
+    }
+    public void memberList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
+    {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM management";
+        req.setCharacterEncoding(ENCODING);
+        resp.setContentType(CONTENT_TYPE);     
+        try
+        {   
+            conn = connection(resp); 
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery((sql));
+            System.out.println(sql);
+            
+            resp.getWriter().println("<html><head><title>会员列表</title></head>");
+            resp.getWriter().println("<body><h1>会员列表</h1></h1>");
+            resp.getWriter().println("<table border=1><tr><th>Id</th><th>Name</th></tr>");         
+            while(rs.next())
+            {
+                Long id = rs.getLong("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");                               
+                resp.getWriter().println("<tr><td><a href=\"?id=" + id + "\">" + id + "</td><td>" + firstName + lastName + "</td></tr>");
+                
+            }
+            resp.getWriter().println("</table><a href=\".\">会员管理</a></body></html>");
+        }
+        catch(SQLException ex)
+            {
+                System.out.println("SQLExcepton: " + ex.getMessage());
+                System.out.println("SQLStates: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                resp.getWriter().println("error!");
+            }
+        finally
+        {
+            close(conn);
+            close(stmt);
         }
     }
     
