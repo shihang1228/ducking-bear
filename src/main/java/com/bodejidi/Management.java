@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.lang.AutoCloseable;
+import javax.servlet.http.HttpSession;
 
 public class Management extends HttpServlet
 {
@@ -48,7 +49,25 @@ public class Management extends HttpServlet
          
         if("login".equals(action))
         {
-                    
+            String username = req.getParameter("username");       
+            String password = req.getParameter("password");
+            
+            if(username.equals("shihang")&&password.equals("sh1228sh"))
+            {
+                HttpSession session = req.getSession();
+                session.setAttribute("memberID",0L);
+                resp.getWriter().println("<html><head><title>Login Success</title></head>"
+                                        +"<body><p>Welcome  " + username + "!!!</p>"
+                                        +"<a href=\"member\">Member List</a>"
+                                        +"</body></html>");
+            }
+            else
+            {
+                resp.getWriter().println("<html><head><title>Login Success</title></head>"
+                                        +"<body><p>login failed!!!</p>"
+                                        +"<a href=\".\">会员登录</a>"
+                                        +"</body></html>");
+            }
         }
         else if("register".equals(action))
         {
@@ -300,6 +319,7 @@ public class Management extends HttpServlet
             close(stmt);
         }
     }
+    
     
     
 }
