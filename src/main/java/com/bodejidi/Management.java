@@ -71,7 +71,7 @@ public class Management extends HttpServlet
                                         +"firstName:<input type=\"text\" name=\"first_name\"/></br>"
                                         +"lastName:<input type=\"text\" name=\"last_name\"/></br>"
                                         +"<input type=\"submit\" name=\"action\" value=\"Add\"/>"
-                                        +"</form></body></html>");  
+                                        +"</form><a href=\".\">会员登录</a></body></html>");  
     }
     public Connection connection(HttpServletResponse resp)throws ServletException, IOException
     {
@@ -171,7 +171,7 @@ public class Management extends HttpServlet
                 resp.getWriter().println("<tr><td><a href=\"?id=" + id + "\">" + id + "</td><td>" + firstName + lastName + "</td></tr>");
                 
             }
-            resp.getWriter().println("</table><a href=\".\">会员管理</a></body></html>");
+            resp.getWriter().println("</table><a href=\".\">会员登录</a></body></html>");
         }
         catch(SQLException ex)
             {
