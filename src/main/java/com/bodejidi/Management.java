@@ -27,9 +27,47 @@ public class Management extends HttpServlet
         ResultSet rs = null;
         String sql = "SELECT * FROM management";
         req.setCharacterEncoding(ENCODING);
-        resp.setContentType(CONTENT_TYPE);     
-        memberList(req,resp);
-        
+        resp.setContentType(CONTENT_TYPE);
+        String pid = req.getParameter("id");
+        if(pid==null)
+        {
+            memberList(req,resp);
+        }
+        else
+        {
+            try
+            {
+                conn = connection(resp); 
+                stmt = conn.createStatement();
+                sql = sql + " where id=" + pid;
+                rs = stmt.executeQuery((sql));
+                System.out.println(sql);
+                rs.next();
+                Long id = rs.getLong("id");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                resp.getWriter().println("<html><head><title>指定会员</title></head>"
+                                    +"<body><h1>第" + pid + "号会员</h1>"
+                                    +"<table border=1><tr><th>ID</th><th>firstName</th><th>lastName</th></tr>"
+                                    +"<tr><td>" + id + "</td><td>" + firstName + "</td><td>" + lastName + "</td></tr>"
+                                    +"</table><form><input type=\"submit\" name=\"action\" value=\"update\"/>"
+                                    +"<input type=\"submit\" name=\"action\" value=\"delete\"/>"
+                                    +"</form></body></html>");
+            
+            }        
+            catch(SQLException ex)
+            {
+                System.out.println("SQLExcepton: " + ex.getMessage());
+                System.out.println("SQLStates: " + ex.getSQLState());
+                System.out.println("VendorError: " + ex.getErrorCode());
+                resp.getWriter().println("error!");
+            }
+            finally
+            {
+                close(conn);
+                close(stmt);
+            }
+        }      
     }
     public void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException
     {
