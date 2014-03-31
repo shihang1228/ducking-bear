@@ -26,11 +26,18 @@ public class Management extends HttpServlet
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
+        String action = req.getParameter("action");
         String sql = "SELECT * FROM management";
         req.setCharacterEncoding(ENCODING);
         resp.setContentType(CONTENT_TYPE);
         String pid = req.getParameter("id");
         HttpSession session = req.getSession();
+      
+        if("logout".equals(action))
+        {
+            session.removeAttribute("memberId");
+        }
+        
         Long memberId = (Long)session.getAttribute("memberId");
         
         if(memberId == null)
@@ -38,6 +45,7 @@ public class Management extends HttpServlet
             login(req,resp);
             return;
         }
+        
         if(pid==null)
         {
             memberList(req,resp);
@@ -66,14 +74,15 @@ public class Management extends HttpServlet
                 session.setAttribute("memberId",0L);
                 resp.getWriter().println("<html><head><title>Login Success</title></head>"
                                         +"<body><p>Welcome  " + username + "!!!</p>"
-                                        +"<a href=\"member\">Member List</a>"
+                                        +"<a href=\"member\">Member List</a></br>"
+                                        +"<a href=\"?action=logout\">logout</a>"
                                         +"</body></html>");
             }
             else
             {
                 resp.getWriter().println("<html><head><title>Login Success</title></head>"
                                         +"<body><p>login failed!!!</p>"
-                                       // +"<a href=\"member\">会员登录</a>"
+                                        +"<a href=\"member\">会员登录</a>"
                                         +"</body></html>");
             }
         }
